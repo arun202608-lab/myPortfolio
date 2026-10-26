@@ -1,0 +1,546 @@
+
+/* =====================================
+   SECTION
+===================================== */
+
+.coverflow-section {
+  position: relative;
+  min-height: 700px;
+  padding: 75px 0 45px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #070b14;
+  color: #fff;
+}
+
+.coverflow-background {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(
+      circle,
+      rgba(88, 166, 190, 0.17) 1px,
+      transparent 1.5px
+    ),
+    radial-gradient(
+      ellipse at 50% 45%,
+      rgba(0, 180, 210, 0.09),
+      transparent 65%
+    );
+  background-size: 18px 18px, 100% 100%;
+  mask-image: linear-gradient(
+    to bottom,
+    transparent,
+    #000 10%,
+    #000 90%,
+    transparent
+  );
+}
+
+.coverflow-container {
+  width: min(1200px, 96%);
+  margin: 0 auto;
+}
+
+/* =====================================
+   HEADING
+===================================== */
+
+.coverflow-heading {
+  position: relative;
+  z-index: 20;
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.coverflow-eyebrow {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #48d8ed;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 4px;
+}
+
+.coverflow-heading h2 {
+  margin: 0;
+  color: #f1f5f9;
+  font-size: clamp(25px, 3vw, 38px);
+  font-weight: 800;
+  letter-spacing: 0.5px;
+}
+
+.coverflow-heading p {
+  margin: 17px 0 0;
+  color: #a3adbd;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* =====================================
+   3D STAGE
+===================================== */
+
+.coverflow-stage {
+  position: relative;
+  height: 385px;
+  perspective: 1200px;
+  perspective-origin: center center;
+}
+
+.coverflow-cards {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+/* =====================================
+   PROJECT CARD
+===================================== */
+
+.coverflow-card {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 320px;
+  height: 300px;
+  overflow: hidden;
+  border: 1px solid rgba(37, 216, 241, 0.4);
+  border-radius: 10px;
+  background: #050609;
+  box-shadow: 0 0 18px rgba(0, 207, 238, 0.13);
+
+  transform:
+    translateX(calc(-50% + var(--position) * 285px))
+    translateZ(calc(var(--distance) * -100px))
+    rotateY(calc(var(--position) * -13deg))
+    scale(calc(1 - var(--distance) * 0.11));
+
+  opacity: 1;
+  filter: brightness(calc(1 - var(--distance) * 0.25));
+  transform-style: preserve-3d;
+
+  transition:
+    transform 650ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 500ms ease,
+    filter 500ms ease,
+    border-color 500ms ease,
+    box-shadow 500ms ease;
+
+  cursor: pointer;
+}
+
+.coverflow-card.is-active {
+  border-color: #18d8f2;
+  box-shadow:
+    0 0 12px rgba(24, 216, 242, 0.45),
+    0 0 32px rgba(24, 216, 242, 0.18);
+  filter: brightness(1);
+}
+
+/* Hide cards further from the active card */
+
+.coverflow-card[aria-hidden="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* =====================================
+   PROJECT IMAGE
+===================================== */
+
+.coverflow-image {
+  position: relative;
+  height: 145px;
+  overflow: hidden;
+  background: #111827;
+}
+
+.coverflow-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 650ms ease;
+}
+
+.coverflow-card.is-active:hover .coverflow-image img {
+  transform: scale(1.06);
+}
+
+.coverflow-image-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  padding: 15px;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.65),
+    transparent 75%
+  );
+}
+
+.coverflow-image-overlay span {
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+/* =====================================
+   CONTENT
+===================================== */
+
+.coverflow-content {
+  padding: 15px;
+}
+
+.coverflow-category {
+  display: block;
+  margin-bottom: 6px;
+  color: #8994a8;
+  font-size: 10px;
+}
+
+.coverflow-content h3 {
+  margin: 0 0 8px;
+  color: #f8fafc;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.coverflow-content p {
+  display: -webkit-box;
+  min-height: 42px;
+  margin: 0 0 11px;
+  overflow: hidden;
+  color: #929bac;
+  font-size: 11px;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}
+
+/* =====================================
+   TECH STACK
+===================================== */
+
+.coverflow-tech {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.coverflow-tech span {
+  padding: 4px 7px;
+  border: 1px solid rgba(27, 202, 235, 0.65);
+  border-radius: 12px;
+  color: #50d9f2;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+/* =====================================
+   PROJECT LINK
+===================================== */
+
+.coverflow-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #d5dae3;
+  font-size: 11px;
+  text-decoration: none;
+  transition: color 250ms ease;
+}
+
+.coverflow-link:hover {
+  color: #4ce4f7;
+}
+
+.coverflow-link span {
+  transition: transform 250ms ease;
+}
+
+.coverflow-link:hover span {
+  transform: translate(3px, -2px);
+}
+
+.disabled-link {
+  color: #8a94a6;
+  cursor: default;
+}
+
+/* =====================================
+   ARROW BUTTONS
+===================================== */
+
+.coverflow-arrow {
+  position: absolute;
+  top: 43%;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 43px;
+  height: 43px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  background: rgba(32, 35, 42, 0.85);
+  color: #fff;
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 250ms ease,
+    border-color 250ms ease,
+    transform 250ms ease;
+}
+
+.coverflow-arrow:hover {
+  transform: scale(1.1);
+  border-color: #42d8ef;
+  background: #10313b;
+}
+
+.coverflow-arrow-left {
+  left: 0;
+}
+
+.coverflow-arrow-right {
+  right: 0;
+}
+
+/* =====================================
+   PAGINATION DOTS
+===================================== */
+
+.coverflow-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 9px;
+  margin-top: 8px;
+}
+
+.coverflow-dot {
+  width: 7px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: #d5d9df;
+  opacity: 0.85;
+  cursor: pointer;
+  transition:
+    width 300ms ease,
+    background 300ms ease,
+    opacity 300ms ease;
+}
+
+.coverflow-dot.active {
+  width: 22px;
+  background: #7ce6f5;
+  opacity: 1;
+}
+
+/* =====================================
+   FOOTER
+===================================== */
+
+.coverflow-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  margin-top: 42px;
+  text-align: center;
+}
+
+.coverflow-footer p {
+  margin: 0;
+  color: #aab4c5;
+  font-size: 13px;
+}
+
+.coverflow-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid rgba(48, 215, 238, 0.4);
+  border-radius: 7px;
+  color: #56dff2;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  transition:
+    background 250ms ease,
+    color 250ms ease;
+}
+
+.coverflow-contact:hover {
+  background: #20cbe5;
+  color: #061018;
+}
+
+/* =====================================
+   TABLET
+===================================== */
+
+@media (max-width: 900px) {
+  .coverflow-stage {
+    height: 370px;
+  }
+
+  .coverflow-card {
+    width: 290px;
+    transform:
+      translateX(calc(-50% + var(--position) * 245px))
+      translateZ(calc(var(--distance) * -90px))
+      rotateY(calc(var(--position) * -12deg))
+      scale(calc(1 - var(--distance) * 0.12));
+  }
+
+  .coverflow-arrow-left {
+    left: 2px;
+  }
+
+  .coverflow-arrow-right {
+    right: 2px;
+  }
+}
+
+/* =====================================
+   MOBILE
+===================================== */
+
+@media (max-width: 600px) {
+  .coverflow-section {
+    min-height: auto;
+    padding: 65px 0 40px;
+  }
+
+  .coverflow-container {
+    width: 100%;
+  }
+
+  .coverflow-heading {
+    padding: 0 15px;
+    margin-bottom: 25px;
+  }
+
+  .coverflow-heading h2 {
+    font-size: 25px;
+  }
+
+  .coverflow-heading p {
+    font-size: 12px;
+  }
+
+  .coverflow-stage {
+    height: 380px;
+    perspective: 1000px;
+  }
+
+  .coverflow-card {
+    top: 15px;
+    width: min(270px, 72vw);
+    height: 305px;
+
+    transform:
+      translateX(calc(-50% + var(--position) * 185px))
+      translateZ(calc(var(--distance) * -80px))
+      rotateY(calc(var(--position) * -12deg))
+      scale(calc(1 - var(--distance) * 0.1));
+  }
+
+  .coverflow-image {
+    height: 125px;
+  }
+
+  .coverflow-content {
+    padding: 13px;
+  }
+
+  .coverflow-content h3 {
+    font-size: 15px;
+  }
+
+  .coverflow-content p {
+    font-size: 10px;
+  }
+
+  .coverflow-tech {
+    gap: 5px;
+  }
+
+  .coverflow-tech span {
+    font-size: 8px;
+  }
+
+  .coverflow-arrow {
+    top: auto;
+    bottom: 0;
+    width: 36px;
+    height: 36px;
+    font-size: 27px;
+  }
+
+  .coverflow-arrow-left {
+    left: 12px;
+  }
+
+  .coverflow-arrow-right {
+    right: 12px;
+  }
+
+  .coverflow-pagination {
+    margin-top: 5px;
+  }
+
+  .coverflow-footer {
+    padding: 0 15px;
+    margin-top: 35px;
+  }
+}
+
+/* =====================================
+   REDUCED MOTION
+===================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .coverflow-card,
+  .coverflow-image img,
+  .coverflow-arrow,
+  .coverflow-dot {
+    transition: none !important;
+  }
+}
+.coverflow-content h3 {
+  margin: 8px 0 12px;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.coverflow-card.is-active .coverflow-content h3 {
+  color: #67e8f9;
+}
+
+.coverflow-heading h2 span {
+  color: #22d3ee;
+}
