@@ -1,1 +1,30 @@
- 
+/* =========================================================
+   Global Reset & Caret Safeguards
+   Prevents blinking caret (insertion cursor) on plain text clicks
+   while keeping caret active for real inputs/textareas
+   ========================================================= */
+
+*:not(input):not(textarea):not([contenteditable="true"]) {
+  caret-color: transparent;
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+  caret-color: auto;
+}
+
+/* Prevent annoying text selection on UI action controls */
+button,
+a,
+nav,
+.btn,
+.nav-link,
+.admin-nav-item,
+.chip,
+.badge,
+.tab-btn,
+.sidebar-link {
+  -webkit-user-select: none;
+  user-select: none;
+}
