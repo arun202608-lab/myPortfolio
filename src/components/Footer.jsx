@@ -70,15 +70,15 @@ function Footer() {
             </p>
 
             <a
-              href="mailto:your-email@example.com"
+              href="mailto:arun202608@gmail.com"
               className="footer-contact-link"
             >
               <span className="footer-icon">✉</span>
-              <span>your-email@example.com</span>
+              <span>arun202608@gmail.com</span>
             </a>
 
             <a
-              href="https://www.linkedin.com/"
+              href="https://www.linkedin.com/in/arun-s-2026bc/"
               target="_blank"
               rel="noopener noreferrer"
               className="footer-contact-link"
@@ -88,7 +88,7 @@ function Footer() {
             </a>
 
             <a
-              href="https://github.com/"
+              href="https://github.com/arun202608-lab"
               target="_blank"
               rel="noopener noreferrer"
               className="footer-contact-link"

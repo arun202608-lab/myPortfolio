@@ -81,7 +81,7 @@ function Hero() {
 
         <div className="hero-socials">
           <a
-            href="https://github.com/YOUR_USERNAME"
+            href="https://github.com/arun202608-lab"
             target="_blank"
             rel="noreferrer"
             className="social-link github-link"
@@ -102,7 +102,7 @@ function Hero() {
           </a>
 
           <a
-            href="https://www.linkedin.com/in/YOUR_USERNAME/"
+            href="https://www.linkedin.com/in/arun-s-2026bc/"
             target="_blank"
             rel="noreferrer"
             className="social-link linkedin-link"

@@ -114,15 +114,15 @@ function Contact() {
             <span>✉</span>
             <div>
               <small>Email</small>
-              <p>your-email@example.com</p>
+              <p>arun202608@gmail.com</p>
             </div>
           </div>
 
           <div className="contact-detail">
             <span>🌐</span>
             <div>
-              <small>Availability</small>
-              <p>Open to opportunities</p>
+              <small>Phone</small>
+              <p>+91 8148645255</p>
             </div>
           </div>
         </div>
