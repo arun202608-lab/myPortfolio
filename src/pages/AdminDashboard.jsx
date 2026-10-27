@@ -23,6 +23,14 @@ const TODAY_FORMATTED = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
 }).format(new Date());
 
+function formatExternalUrl(url) {
+  if (!url) return "";
+  const trimmed = String(url).trim();
+  if (!trimmed || trimmed === "#") return "";
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 function AdminDashboard() {
   const navigate = useNavigate();
   const adminUser = getAuthUser();
@@ -58,6 +66,7 @@ function AdminDashboard() {
     image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80",
     tech: "React, Node.js, MongoDB",
     demo: "",
+    github: "",
     order: 1,
   });
   const [projectFormErrors, setProjectFormErrors] = useState({});
@@ -235,6 +244,7 @@ function AdminDashboard() {
       image: "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80",
       tech: "React, Node.js, MongoDB",
       demo: "",
+      github: "",
       order: projects.length + 1,
     });
     setProjectFormErrors({});
@@ -250,6 +260,7 @@ function AdminDashboard() {
       image: project.image || "",
       tech: Array.isArray(project.tech) ? project.tech.join(", ") : (project.tech || ""),
       demo: project.demo || "",
+      github: project.github || "",
       order: typeof project.order === "number" ? project.order : 0,
     });
     setProjectFormErrors({});
@@ -282,7 +293,8 @@ function AdminDashboard() {
       description: projectFormData.description.trim(),
       image: projectFormData.image.trim() || undefined,
       tech: techArray.length > 0 ? techArray : ["React"],
-      demo: projectFormData.demo.trim(),
+      demo: formatExternalUrl(projectFormData.demo),
+      github: formatExternalUrl(projectFormData.github),
       order: Number(projectFormData.order) || 0,
     };
 
@@ -1678,19 +1690,32 @@ function AdminDashboard() {
                               : <span className="tech-tag">{String(project.tech)}</span>}
                           </div>
 
-                          {project.demo && (
-                            <div style={{ marginTop: "6px" }}>
+                          <div style={{ marginTop: "8px", display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                            {project.demo && (
                               <a
-                                href={project.demo}
+                                href={formatExternalUrl(project.demo)}
                                 target="_blank"
                                 rel="noreferrer"
                                 className="action-btn-secondary"
-                                style={{ fontSize: "11px", display: "inline-flex" }}
+                                style={{ fontSize: "11px", display: "inline-flex", alignItems: "center", gap: "4px" }}
+                                title="Open Live Demo in new tab"
                               >
                                 Live Demo ↗
                               </a>
-                            </div>
-                          )}
+                            )}
+                            {project.github && (
+                              <a
+                                href={formatExternalUrl(project.github)}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="action-btn-secondary"
+                                style={{ fontSize: "11px", display: "inline-flex", alignItems: "center", gap: "4px" }}
+                                title="Open GitHub Repository in new tab"
+                              >
+                                GitHub ⌘
+                              </a>
+                            )}
+                          </div>
 
                           {/* Card Action Buttons Toolbar */}
                           <div className="project-card-actions">
@@ -2273,40 +2298,65 @@ function AdminDashboard() {
                 {/* Demo URL */}
                 <div className="admin-form-group">
                   <label htmlFor="p-demo" className="admin-form-label">
-                    Live Demo / GitHub Link (optional)
+                    Live Demo URL (optional)
                   </label>
                   <input
                     id="p-demo"
-                    type="url"
+                    type="text"
                     className="admin-form-input"
-                    placeholder="https://myproject.com"
+                    placeholder="e.g. https://myproject.vercel.app"
                     value={projectFormData.demo}
                     onChange={(e) =>
                       setProjectFormData({ ...projectFormData, demo: e.target.value })
                     }
                     disabled={projectSubmitting}
                   />
+                  {projectFormData.demo && (
+                    <div style={{ marginTop: "4px", display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span className="admin-form-hint">Link: {formatExternalUrl(projectFormData.demo)}</span>
+                      <a
+                        href={formatExternalUrl(projectFormData.demo)}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ color: "var(--admin-cyan)", fontSize: "11px", textDecoration: "underline" }}
+                      >
+                        Test Link ↗
+                      </a>
+                    </div>
+                  )}
                 </div>
               </div>
 
               <div className="form-grid-two-cols">
-                {/* Image URL */}
+                {/* GitHub Repository URL */}
                 <div className="admin-form-group">
-                  <label htmlFor="p-image" className="admin-form-label">
-                    Image / Screenshot URL
+                  <label htmlFor="p-github" className="admin-form-label">
+                    GitHub Repository Link (optional)
                   </label>
                   <input
-                    id="p-image"
-                    type="url"
+                    id="p-github"
+                    type="text"
                     className="admin-form-input"
-                    placeholder="https://images.unsplash.com/..."
-                    value={projectFormData.image}
+                    placeholder="e.g. https://github.com/arun202608-lab/..."
+                    value={projectFormData.github || ""}
                     onChange={(e) =>
-                      setProjectFormData({ ...projectFormData, image: e.target.value })
+                      setProjectFormData({ ...projectFormData, github: e.target.value })
                     }
                     disabled={projectSubmitting}
                   />
-                  <span className="admin-form-hint">Direct link to hosted screenshot or Unsplash URL</span>
+                  {projectFormData.github && (
+                    <div style={{ marginTop: "4px", display: "flex", alignItems: "center", gap: "8px" }}>
+                      <span className="admin-form-hint">Repo: {formatExternalUrl(projectFormData.github)}</span>
+                      <a
+                        href={formatExternalUrl(projectFormData.github)}
+                        target="_blank"
+                        rel="noreferrer"
+                        style={{ color: "var(--admin-cyan)", fontSize: "11px", textDecoration: "underline" }}
+                      >
+                        Test Repo ↗
+                      </a>
+                    </div>
+                  )}
                 </div>
 
                 {/* Display Order */}
@@ -2327,6 +2377,25 @@ function AdminDashboard() {
                     disabled={projectSubmitting}
                   />
                 </div>
+              </div>
+
+              {/* Image URL */}
+              <div className="admin-form-group">
+                <label htmlFor="p-image" className="admin-form-label">
+                  Image / Screenshot URL
+                </label>
+                <input
+                  id="p-image"
+                  type="url"
+                  className="admin-form-input"
+                  placeholder="https://images.unsplash.com/..."
+                  value={projectFormData.image}
+                  onChange={(e) =>
+                    setProjectFormData({ ...projectFormData, image: e.target.value })
+                  }
+                  disabled={projectSubmitting}
+                />
+                <span className="admin-form-hint">Direct link to hosted screenshot or Unsplash URL</span>
               </div>
 
               {/* Live Preview Box */}

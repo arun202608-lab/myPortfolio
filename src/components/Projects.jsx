@@ -4,8 +4,22 @@ import "./Projects.css";
 import { projectsData } from "../data/projectsData";
 import { getProjects } from "../services/api";
 
+function formatExternalUrl(url) {
+  if (!url) return "";
+  const trimmed = String(url).trim();
+  if (!trimmed || trimmed === "#") return "";
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+}
+
 function Projects() {
-  const [projects, setProjects] = useState(projectsData);
+  const [projects, setProjects] = useState(
+    projectsData.map((p) => ({
+      ...p,
+      demo: formatExternalUrl(p.demo),
+      github: formatExternalUrl(p.github || ""),
+    }))
+  );
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
@@ -24,9 +38,12 @@ function Projects() {
             title: item.title,
             category: item.category,
             description: item.description,
-            image: item.image || "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80",
+            image:
+              item.image ||
+              "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80",
             tech: Array.isArray(item.tech) ? item.tech : [item.tech].filter(Boolean),
-            demo: item.demo || "",
+            demo: formatExternalUrl(item.demo || item.liveDemo || item.link || ""),
+            github: formatExternalUrl(item.github || ""),
           }));
           setProjects(normalized);
         }
@@ -74,28 +91,22 @@ function Projects() {
     return position;
   };
 
-
   return (
     <section className="coverflow-section" id="projects">
       <div className="coverflow-background"></div>
 
       <div className="coverflow-container">
-       
-          <header className="coverflow-heading">
-            <span className="coverflow-eyebrow">
-              WHAT I HAVE BUILT
-            </span>
+        <header className="coverflow-heading">
+          <span className="coverflow-eyebrow">WHAT I HAVE BUILT</span>
 
-            <h2>
-              My <span>Projects</span>
-            </h2>
+          <h2>
+            My <span>Projects</span>
+          </h2>
 
-            <p>
-              Explore my latest projects, development skills, and creative work.
-            </p>
-          </header>
-
-
+          <p>
+            Explore my latest projects, development skills, and creative work.
+          </p>
+        </header>
 
         <div className="coverflow-stage">
           {/* Previous arrow */}
@@ -112,70 +123,99 @@ function Projects() {
           <div className="coverflow-cards">
             {projects.map((project, index) => {
               const position = getPosition(index);
+              const isActive = position === 0;
 
               return (
                 <article
                   key={project.id}
-                  className={`coverflow-card ${
-                    position === 0 ? "is-active" : ""
-                  }`}
+                  className={`coverflow-card ${isActive ? "is-active" : ""}`}
                   style={{
                     "--position": position,
                     "--distance": Math.abs(position),
                     zIndex: projects.length - Math.abs(position),
                   }}
                   onClick={() => {
-                    if (position !== 0) {
+                    if (!isActive) {
                       goToSlide(index);
                     }
                   }}
                   aria-hidden={Math.abs(position) > 1}
                 >
-                  <div className="coverflow-image">
-                    <img
-                      src={project.image}
-                      alt={project.title}
-                    />
+                  <div
+                    className="coverflow-image"
+                    onClick={(e) => {
+                      if (isActive && project.demo) {
+                        e.stopPropagation();
+                        window.open(project.demo, "_blank", "noopener,noreferrer");
+                      }
+                    }}
+                    style={{
+                      cursor: isActive && project.demo ? "pointer" : "inherit",
+                    }}
+                    title={isActive && project.demo ? "Click to open live demo" : undefined}
+                  >
+                    <img src={project.image} alt={project.title} />
 
                     <div className="coverflow-image-overlay">
                       <span>{project.category}</span>
+                      {isActive && project.demo && (
+                        <span className="coverflow-overlay-badge">
+                          Launch Demo ↗
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   <div className="coverflow-content">
-                    <span className="coverflow-category">
-                      {project.category}
-                    </span>
+                    <div>
+                      <span className="coverflow-category">
+                        {project.category}
+                      </span>
 
-                    <h3>{project.title}</h3>
+                      <h3>{project.title}</h3>
 
-                    <p>{project.description}</p>
+                      <p>{project.description}</p>
 
-                    <div className="coverflow-tech">
-                      {project.tech.map((technology) => (
-                        <span key={technology}>
-                          {technology}
-                        </span>
-                      ))}
+                      <div className="coverflow-tech">
+                        {project.tech.map((technology) => (
+                          <span key={technology}>{technology}</span>
+                        ))}
+                      </div>
                     </div>
 
-                    {project.demo && (
-                      <a
-                        href={project.demo}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="coverflow-link"
-                        onClick={(event) => event.stopPropagation()}
-                      >
-                        Learn more <span>↗</span>
-                      </a>
-                    )}
+                    <div className="coverflow-actions">
+                      {project.demo && (
+                        <a
+                          href={project.demo}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="coverflow-link demo-link"
+                          onClick={(event) => event.stopPropagation()}
+                          title={`Open Live Demo for ${project.title}`}
+                        >
+                          <span>Live Demo</span> <span>↗</span>
+                        </a>
+                      )}
 
-                    {!project.demo && (
-                      <span className="coverflow-link disabled-link">
-                        Project Preview <span>→</span>
-                      </span>
-                    )}
+                      {project.github && (
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="coverflow-link github-btn"
+                          onClick={(event) => event.stopPropagation()}
+                          title={`View Source Code on GitHub`}
+                        >
+                          <span>GitHub</span> <span>⌘</span>
+                        </a>
+                      )}
+
+                      {!project.demo && !project.github && (
+                        <span className="coverflow-link disabled-link">
+                          Preview Ready <span>→</span>
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </article>
               );

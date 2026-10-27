@@ -85,7 +85,7 @@
 
 .coverflow-stage {
   position: relative;
-  height: 385px;
+  height: 440px;
   perspective: 1200px;
   perspective-origin: center center;
 }
@@ -103,15 +103,17 @@
 
 .coverflow-card {
   position: absolute;
-  top: 8px;
+  top: 10px;
   left: 50%;
-  width: 320px;
-  height: 300px;
+  width: 325px;
+  height: 385px;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   border: 1px solid rgba(37, 216, 241, 0.4);
-  border-radius: 10px;
-  background: #050609;
-  box-shadow: 0 0 18px rgba(0, 207, 238, 0.13);
+  border-radius: 12px;
+  background: #080d1a;
+  box-shadow: 0 0 20px rgba(0, 207, 238, 0.14);
 
   transform:
     translateX(calc(-50% + var(--position) * 285px))
@@ -136,8 +138,8 @@
 .coverflow-card.is-active {
   border-color: #18d8f2;
   box-shadow:
-    0 0 12px rgba(24, 216, 242, 0.45),
-    0 0 32px rgba(24, 216, 242, 0.18);
+    0 0 16px rgba(24, 216, 242, 0.5),
+    0 0 36px rgba(24, 216, 242, 0.22);
   filter: brightness(1);
 }
 
@@ -155,6 +157,7 @@
 .coverflow-image {
   position: relative;
   height: 145px;
+  flex-shrink: 0;
   overflow: hidden;
   background: #111827;
 }
@@ -176,12 +179,14 @@
   inset: 0;
   display: flex;
   align-items: flex-end;
-  padding: 15px;
+  justify-content: space-between;
+  padding: 12px 14px;
   background: linear-gradient(
     to top,
-    rgba(0, 0, 0, 0.65),
+    rgba(0, 0, 0, 0.75),
     transparent 75%
   );
+  pointer-events: none;
 }
 
 .coverflow-image-overlay span {
@@ -192,37 +197,56 @@
   text-transform: uppercase;
 }
 
+.coverflow-overlay-badge {
+  background: rgba(0, 240, 255, 0.25);
+  border: 1px solid #00f0ff;
+  color: #00f0ff !important;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 10px !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(4px);
+}
+
 /* =====================================
    CONTENT
 ===================================== */
 
 .coverflow-content {
-  padding: 15px;
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex: 1;
 }
 
 .coverflow-category {
   display: block;
-  margin-bottom: 6px;
-  color: #8994a8;
-  font-size: 10px;
+  margin-bottom: 4px;
+  color: #00f0ff;
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .coverflow-content h3 {
-  margin: 0 0 8px;
+  margin: 0 0 6px;
   color: #f8fafc;
   font-size: 17px;
   font-weight: 750;
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 .coverflow-content p {
   display: -webkit-box;
-  min-height: 42px;
-  margin: 0 0 11px;
+  margin: 0 0 10px;
   overflow: hidden;
   color: #929bac;
-  font-size: 11px;
-  line-height: 1.55;
+  font-size: 11.5px;
+  line-height: 1.5;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
   line-clamp: 3;
@@ -236,46 +260,80 @@
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .coverflow-tech span {
-  padding: 4px 7px;
+  padding: 3px 8px;
   border: 1px solid rgba(27, 202, 235, 0.65);
   border-radius: 12px;
   color: #50d9f2;
-  font-size: 9px;
+  font-size: 9.5px;
   white-space: nowrap;
 }
 
 /* =====================================
-   PROJECT LINK
+   PROJECT ACTION BUTTONS
 ===================================== */
+
+.coverflow-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
 
 .coverflow-link {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  color: #d5dae3;
-  font-size: 11px;
+  justify-content: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
   text-decoration: none;
-  transition: color 250ms ease;
+  transition: all 0.25s ease;
+  position: relative;
+  z-index: 35;
+  cursor: pointer;
+  line-height: 1;
 }
 
-.coverflow-link:hover {
-  color: #4ce4f7;
+.coverflow-link.demo-link {
+  background: linear-gradient(135deg, rgba(0, 240, 255, 0.25), rgba(6, 182, 212, 0.38));
+  border: 1px solid rgba(0, 240, 255, 0.75);
+  color: #00f0ff;
+  box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
 }
 
-.coverflow-link span {
-  transition: transform 250ms ease;
+.coverflow-link.demo-link:hover {
+  background: #00f0ff;
+  color: #050609;
+  border-color: #00f0ff;
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.65);
+  transform: translateY(-2px);
 }
 
-.coverflow-link:hover span {
-  transform: translate(3px, -2px);
+.coverflow-link.github-btn {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #e2e8f0;
+}
+
+.coverflow-link.github-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: #ffffff;
+  color: #ffffff;
+  transform: translateY(-2px);
 }
 
 .disabled-link {
-  color: #8a94a6;
+  color: #64748b;
+  border: 1px dashed rgba(100, 116, 139, 0.4);
+  background: transparent;
   cursor: default;
 }
 
@@ -285,7 +343,8 @@
 
 .coverflow-arrow {
   position: absolute;
-  top: 43%;
+  top: 48%;
+  transform: translateY(-50%);
   z-index: 30;
   display: flex;
   align-items: center;
