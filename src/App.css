@@ -820,21 +820,21 @@ a {
   gap: 18px;
 }
 
-.form-group {
+.contact-form .form-group {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-bottom: 22px;
 }
 
-.form-group label {
+.contact-form .form-group label {
   color: #d4d4d8;
   font-size: 12px;
   font-weight: 600;
 }
 
-.form-group input,
-.form-group textarea {
+.contact-form .form-group input,
+.contact-form .form-group textarea {
   width: 100%;
   padding: 14px;
   border: 1px solid #30303b;
@@ -847,13 +847,13 @@ a {
   transition: border-color 0.3s ease;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.contact-form .form-group input:focus,
+.contact-form .form-group textarea:focus {
   border-color: var(--accent);
 }
 
-.form-group input::placeholder,
-.form-group textarea::placeholder {
+.contact-form .form-group input::placeholder,
+.contact-form .form-group textarea::placeholder {
   color: #666674;
 }
 

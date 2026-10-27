@@ -181,7 +181,7 @@ function AdminLogin() {
           {/* Login Form */}
           <form className="login-form" onSubmit={handleLogin} noValidate>
             {/* Email / Username Field */}
-            <div className="form-group">
+            <div className="form-group login-input-group">
               <label htmlFor="admin-email" className="form-label">
                 Email or Username
               </label>
@@ -216,7 +216,7 @@ function AdminLogin() {
             </div>
 
             {/* Password Field */}
-            <div className="form-group">
+            <div className="form-group login-input-group">
               <label htmlFor="admin-password" className="form-label">
                 Password
               </label>
