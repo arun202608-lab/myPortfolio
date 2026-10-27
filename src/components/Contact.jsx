@@ -1,6 +1,5 @@
- 
 import { useState } from "react";
-import { saveMessage } from "../utils/storage";
+import { submitContact } from "../services/api";
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -11,6 +10,8 @@ function Contact() {
   });
 
   const [status, setStatus] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -19,23 +20,70 @@ function Contact() {
       ...previousData,
       [name]: value,
     }));
+
+    if (status) {
+      setStatus("");
+      setErrorMessage("");
+    }
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
-    const result = saveMessage(formData);
+    const trimmedName = formData.name.trim();
+    const trimmedEmail = formData.email.trim();
+    const trimmedSubject = formData.subject.trim();
+    const trimmedMessage = formData.message.trim();
 
-    if (result) {
-      setStatus("success");
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-    } else {
+    if (!trimmedName || !trimmedEmail || !trimmedSubject || !trimmedMessage) {
       setStatus("error");
+      setErrorMessage("Please fill out all required fields.");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(trimmedEmail)) {
+      setStatus("error");
+      setErrorMessage("Please enter a valid email address.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setStatus("");
+    setErrorMessage("");
+
+    try {
+      const response = await submitContact({
+        name: trimmedName,
+        email: trimmedEmail,
+        subject: trimmedSubject,
+        message: trimmedMessage,
+      });
+
+      if (response && response.success !== false) {
+        setStatus("success");
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+      } else {
+        setStatus("error");
+        setErrorMessage(
+          response?.message || "Failed to send message. Please try again."
+        );
+      }
+    } catch (err) {
+      setStatus("error");
+      const serverMsg =
+        err.response?.data?.message ||
+        (err.code === "ERR_NETWORK"
+          ? "Unable to connect to the backend server. Please verify the server is running."
+          : "Unable to save your message. Please try again.");
+      setErrorMessage(serverMsg);
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -93,6 +141,7 @@ function Contact() {
                 onChange={handleChange}
                 maxLength={100}
                 autoComplete="name"
+                disabled={isSubmitting}
                 required
               />
             </div>
@@ -109,6 +158,7 @@ function Contact() {
                 onChange={handleChange}
                 maxLength={254}
                 autoComplete="email"
+                disabled={isSubmitting}
                 required
               />
             </div>
@@ -125,6 +175,7 @@ function Contact() {
               value={formData.subject}
               onChange={handleChange}
               maxLength={150}
+              disabled={isSubmitting}
               required
             />
           </div>
@@ -140,23 +191,28 @@ function Contact() {
               value={formData.message}
               onChange={handleChange}
               maxLength={5000}
+              disabled={isSubmitting}
               required
             />
           </div>
 
-          <button type="submit" className="primary-button">
-            Send Message ↗
+          <button
+            type="submit"
+            className="primary-button"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Sending Message..." : "Send Message ↗"}
           </button>
 
           {status === "success" && (
             <p className="form-success" role="status">
-              Message saved successfully!
+              Message sent successfully! Thank you for reaching out.
             </p>
           )}
 
           {status === "error" && (
             <p className="form-error" role="alert">
-              Unable to save your message. Please try again.
+              {errorMessage || "Unable to save your message. Please try again."}
             </p>
           )}
         </form>
@@ -166,4 +222,3 @@ function Contact() {
 }
 
 export default Contact;
- 

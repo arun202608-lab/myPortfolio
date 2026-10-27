@@ -1,75 +1,55 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./Projects.css";
-
-const projects = [
-  {
-    id: 1,
-    title: "Food Delivery System",
-    category: "Full Stack Development",
-    description:
-      "A food delivery application with user authentication, cart management, order placement and an admin panel.",
-    image:
-      "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80",
-    tech: ["React", "Node.js", "MongoDB"],
-    demo: "",
-  },
-  {
-    id: 2,
-    title: "Employee Portal",
-    category: "Web Application",
-    description:
-      "An employee portal with role-based access management and organized employee information.",
-    image:
-      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
-    tech: ["React", "Express.js", "MongoDB"],
-    demo: "",
-  },
-  {
-    id: 3,
-    title: "Vessel Rental Website",
-    category: "Frontend Development",
-    description:
-      "A responsive vessel rental website with rental information, service details and an interactive map.",
-    image:
-      "https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?auto=format&fit=crop&w=900&q=80",
-    tech: ["React", "CSS", "Leaflet"],
-    demo: "",
-  },
-  {
-    id: 4,
-    title: "Helppme NGO Website",
-    category: "NGO Website",
-    description:
-      "An NGO website showcasing community initiatives, social activities and healthcare camps.",
-    image:
-      "https://images.unsplash.com/photo-1531206715517-5c0ba140b2b8?auto=format&fit=crop&w=900&q=80",
-    tech: ["React", "Node.js", "MongoDB"],
-    demo: "https://helppme.in",
-  },
-  {
-    id: 5,
-    title: "Developer Portfolio",
-    category: "Frontend Development",
-    description:
-      "A personal portfolio website presenting technical skills, projects and contact information.",
-    image:
-      "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?auto=format&fit=crop&w=900&q=80",
-    tech: ["React", "JavaScript", "CSS"],
-    demo: "",
-  },
-];
+import { projectsData } from "../data/projectsData";
+import { getProjects } from "../services/api";
 
 function Projects() {
+  const [projects, setProjects] = useState(projectsData);
   const [activeIndex, setActiveIndex] = useState(0);
 
+  useEffect(() => {
+    let isMounted = true;
+    async function loadProjects() {
+      try {
+        const res = await getProjects();
+        const list = Array.isArray(res)
+          ? res
+          : Array.isArray(res?.data)
+          ? res.data
+          : [];
+        if (isMounted && list.length > 0) {
+          const normalized = list.map((item) => ({
+            id: item._id || item.id,
+            title: item.title,
+            category: item.category,
+            description: item.description,
+            image: item.image || "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=900&q=80",
+            tech: Array.isArray(item.tech) ? item.tech : [item.tech].filter(Boolean),
+            demo: item.demo || "",
+          }));
+          setProjects(normalized);
+        }
+      } catch (err) {
+        // Fallback silently to static projectsData
+        console.warn("Could not load dynamic projects, using static fallback:", err?.message);
+      }
+    }
+    loadProjects();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   const previousSlide = () => {
+    if (projects.length === 0) return;
     setActiveIndex((current) =>
       current === 0 ? projects.length - 1 : current - 1
     );
   };
 
   const nextSlide = () => {
+    if (projects.length === 0) return;
     setActiveIndex((current) =>
       current === projects.length - 1 ? 0 : current + 1
     );
@@ -81,7 +61,7 @@ function Projects() {
 
   const getPosition = (index) => {
     let position = index - activeIndex;
-    const total = projects.length;
+    const total = projects.length || 1;
 
     if (position > total / 2) {
       position -= total;
@@ -93,6 +73,7 @@ function Projects() {
 
     return position;
   };
+
 
   return (
     <section className="coverflow-section" id="projects">

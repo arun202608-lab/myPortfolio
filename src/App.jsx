@@ -1,8 +1,8 @@
-
 import "./App.css";
 import Home from "./pages/Home.jsx";
 import AdminLogin from "./pages/AdminLogin.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import {
   BrowserRouter,
   Routes,
@@ -10,26 +10,20 @@ import {
   Navigate,
 } from "react-router-dom";
 
-function ProtectedDashboard() {
-  const isLoggedIn =
-    sessionStorage.getItem("arun_admin_logged_in") === "true";
-
-  if (!isLoggedIn) {
-    return <Navigate to="/admin" replace />;
-  }
-
-  return <AdminDashboard />;
-}
-
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/admin" element={<AdminLogin />} />
+        <Route path="/admin/login" element={<Navigate to="/admin" replace />} />
         <Route
           path="/admin/dashboard"
-          element={<ProtectedDashboard />}
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
         />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
@@ -38,4 +32,3 @@ function App() {
 }
 
 export default App;
- 

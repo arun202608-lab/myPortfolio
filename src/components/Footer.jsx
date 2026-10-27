@@ -1,4 +1,5 @@
 
+import { Link } from "react-router-dom";
 import "./Footer.css";
 
 function Footer() {
@@ -115,10 +116,10 @@ function Footer() {
 
           {/* Admin and Back to Top Buttons */}
           <div className="footer-bottom-actions">
-            <a href="/admin" className="footer-admin-btn">
+            <Link to="/admin" className="footer-admin-btn">
               <span className="admin-icon">⚙</span>
               Admin Login
-            </a>
+            </Link>
 
             <a href="#home" className="footer-back-top">
               Back to Top ↑
